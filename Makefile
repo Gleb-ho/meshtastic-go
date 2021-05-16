@@ -1,3 +1,5 @@
+VERSION:=1.0.0
+
 TIMESTAMP=$(shell date +'%Y%m%d%H%M%S')
 SERVICE_NAME=meshtastic-go
 BIN?=$(pwd)/bin
@@ -25,8 +27,9 @@ help:
 	@echo "lint                 check for linter errors"
 	@echo "mod                  install dependencies modules to global GOPATH"
 	@echo "modupdate            update all dependencies (it's not recommended, to update one package use go get)"
-	@echo "build                build application (and local resources tool) from sources with code generate"
-	@echo "run                  run application (start service)"
+	@echo "build                build application from sources"
+	@echo "build-release        build application for all supported platforms"
+	@echo "run                  build and run application"
 
 .PHONY: clean
 clean: env
@@ -68,12 +71,36 @@ build: env fmt
 	GOARCH=$(GOARCH) \
 	go build $(BUILD_ARGS) -o $(BINARY) service/cmd
 
-.PHONY: build-linux
-build-linux: env fmt
+.PHONY: build-release
+build-release: build-linux-amd64 build-darwin-arm64 build-darwin-amd64 build-windows-amd64
+
+.PHONY: build-linux-amd64
+build-linux-amd64: env fmt
 	cd src && \
 	GOOS=linux \
 	GOARCH=amd64 \
-	go build $(BUILD_ARGS) -o $(BINARY)-linux service/cmd
+	go build $(BUILD_ARGS) -o $(BINARY)-$(VERSION)-linux-amd64 service/cmd
+
+.PHONY: build-darwin-arm64
+build-darwin-arm64: env fmt
+	cd src && \
+	GOOS=darwin \
+	GOARCH=arm64 \
+	go build $(BUILD_ARGS) -o $(BINARY)-$(VERSION)-darwin-arm64 service/cmd
+
+.PHONY: build-darwin-amd64
+build-darwin-amd64: env fmt
+	cd src && \
+	GOOS=darwin \
+	GOARCH=amd64 \
+	go build $(BUILD_ARGS) -o $(BINARY)-$(VERSION)-darwin-amd64 service/cmd
+
+.PHONY: build-windows-amd64
+build-windows-amd64: env fmt
+	cd src && \
+	GOOS=windows \
+	GOARCH=amd64 \
+	go build $(BUILD_ARGS) -o $(BINARY)-$(VERSION)-windows-amd64.exe service/cmd
 
 .PHONY: run
 run: build

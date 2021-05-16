@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/twpayne/go-kml"
 
@@ -27,7 +28,9 @@ func (h kmlHandler) ServeHTTP(writer http.ResponseWriter, _ *http.Request) {
 
 	for _, node := range nodes {
 		k := kml.Placemark(
-			kml.Name(node.User.LongName),
+			kml.Name(
+				node.User.LongName+" "+time.Since(time.Unix(node.LastHeard, 0)).Truncate(time.Second).String(),
+			),
 			kml.Point(
 				kml.Coordinates(kml.Coordinate{
 					Lon: node.Position.Longitude,
