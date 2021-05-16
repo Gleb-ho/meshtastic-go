@@ -1,0 +1,7 @@
+interval: 10s
+meshtastic_path: /usr/local/bin/meshtastic
+kml_port: 8999
+nmea_ports:
+  borA: 9990
+  borB: 9991
+  borC: 9992
