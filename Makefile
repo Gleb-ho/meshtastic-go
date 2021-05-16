@@ -1,4 +1,4 @@
-VERSION:=1.0.0
+VERSION:=1.0.1
 
 TIMESTAMP=$(shell date +'%Y%m%d%H%M%S')
 SERVICE_NAME=meshtastic-go

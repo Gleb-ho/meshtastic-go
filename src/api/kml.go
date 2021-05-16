@@ -27,6 +27,10 @@ func (h kmlHandler) ServeHTTP(writer http.ResponseWriter, _ *http.Request) {
 	nodesKML := kml.Document()
 
 	for _, node := range nodes {
+		if node.Position.Latitude == 0 || node.Position.Longitude == 0 {
+			continue
+		}
+
 		k := kml.Placemark(
 			kml.Name(
 				node.User.LongName+" "+time.Since(time.Unix(node.LastHeard, 0)).Truncate(time.Second).String(),
